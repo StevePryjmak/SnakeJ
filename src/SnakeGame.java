@@ -90,11 +90,19 @@ public class SnakeGame extends JPanel implements KeyListener{
 
     public void gameLoop() {
         Tile head = snake.peekFirst();
-        Tile newHead = new Tile(head.x + dx, head.y + dy);
+        //Tile newHead = new Tile(head.x + dx, head.y + dy);
+        Tile newHead = new Tile((head.x + dx + windowWidth / TileSize) % (windowWidth / TileSize), (head.y + dy + windowHeight / TileSize) % (windowHeight / TileSize));
         snake.addFirst(newHead);
 
-        if (newHead.x == food.x && newHead.y == food.y) food = randomFoodTile();
+        if (newHead.checkTileCollision(food)) food = randomFoodTile();
         else snake.removeLast();
+        for (Tile tile : snake) {
+            if (tile != newHead && newHead.checkTileCollision(tile)) {
+                timer.stop();
+                System.out.println("Game Over");
+                break;
+            }
+        }
         moveMade = true;
         repaint();
     }

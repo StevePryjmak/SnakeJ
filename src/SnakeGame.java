@@ -3,15 +3,19 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.*;
+import javax.swing.Timer;
+
 
 
 
 public class SnakeGame extends JPanel {
-    int windowWidth;
-    int windowHeight;
-    int TileSize = 30;
-    Tile food;
-    Queue<Tile> snake = new LinkedList<Tile>();
+
+    private final int windowWidth, windowHeight, TileSize = 30, fps = 10;
+    private Tile food;
+    private Deque<Tile> snake = new LinkedList<>();
+    private final Random random = new Random();
+    private final Timer timer;
+    private int dx = 1, dy = 0;
 
     private class Tile {
         int x;
@@ -32,8 +36,14 @@ public class SnakeGame extends JPanel {
         windowHeight = Height;
         setPreferredSize(new Dimension(windowWidth, windowHeight));
         setBackground(Color.BLACK);
-        food = randomFoodTile();
+        //food = randomFoodTile();
+        food = new Tile(7, 5);
         snake.add(new Tile(5, 5));
+        snake.add(new Tile(4, 5));
+
+        int delay = 1000 / fps;
+        timer = new Timer(delay, e -> gameLoop());
+        timer.start();
     }
     @Override
     public Dimension getPreferredSize() {
@@ -59,6 +69,16 @@ public class SnakeGame extends JPanel {
         }
     }
 
+    public void gameLoop() {
+        Tile head = snake.peekFirst();
+        Tile newHead = new Tile(head.x + dx, head.y + dy);
+        snake.addFirst(newHead);
+
+        if (newHead.x == food.x && newHead.y == food.y) food = randomFoodTile();
+        else snake.removeLast();
+        repaint();
+    }
+
     public Tile randomFoodTile() {
         int maxTilesX = windowWidth / TileSize;
         int maxTilesY = windowHeight / TileSize;
@@ -78,7 +98,6 @@ public class SnakeGame extends JPanel {
             throw new IllegalStateException("No possible positions for food"); // @TODO change it to game over
         }
 
-        Random random = new Random();
         Tile randomTile = possibleTiles.get(random.nextInt(possibleTiles.size()));
         return new Tile(randomTile.x, randomTile.y);
     }

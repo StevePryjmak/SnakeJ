@@ -11,6 +11,7 @@ import javax.swing.Timer;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.awt.Font;
 
 
 
@@ -24,7 +25,7 @@ public class SnakeGame extends JPanel implements KeyListener{
     private final Random random = new Random();
     private final Timer timer;
     private int dx = 0, dy = 1, direction = 0;
-    private boolean moveMade = true;
+    private boolean moveMade = true, gameOver = false;
     private SpriteManager spriteManager = new SpriteManager("src/SnakeAllSprites.png");
 
     private class Tile {
@@ -99,7 +100,6 @@ public class SnakeGame extends JPanel implements KeyListener{
         food.draw(g);
         snake.forEach(tile -> tile.draw(g)); // to optimize it is posible to draw only the head and tail
         g2d.setColor(Color.WHITE);
-
         // Set the thickness for the grid lines
         float thickness = 0.1f;
         g2d.setStroke(new BasicStroke(thickness));
@@ -109,6 +109,15 @@ public class SnakeGame extends JPanel implements KeyListener{
         }
         for (int y = 0; y < windowHeight; y += TileSize) {
             g2d.drawLine(0, y, windowWidth, y);
+        }
+        g.setColor(Color.YELLOW);
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 16));
+        g.drawString("Score: " + (snake.size() - 3), 10, 20);
+
+        if (gameOver) {
+            g.setColor(Color.RED);
+            g.setFont(new Font("TimesRoman", Font.BOLD, 50));
+            g.drawString("Game Over", windowWidth / 2 - 120, windowHeight / 2);
         }
     }
 
@@ -140,6 +149,7 @@ public class SnakeGame extends JPanel implements KeyListener{
             if (tile != newHead && newHead.checkTileCollision(tile)) {
                 timer.stop();
                 System.out.println("Game Over");
+                gameOver = true;
                 break;
             }
         }
@@ -163,6 +173,7 @@ public class SnakeGame extends JPanel implements KeyListener{
             possibleTiles.removeIf(tile -> tile.x == snakeTile.x && tile.y == snakeTile.y);
         }
         if (possibleTiles.isEmpty()) {
+            
             throw new IllegalStateException("No possible positions for food"); // @TODO change it to game over
         }
 

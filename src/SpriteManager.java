@@ -37,9 +37,9 @@ public class SpriteManager {
             snakeSprites[18] = spriteSheet.getSubimage(80, 160, 40, 40); // line (Down -> Up)
             snakeSprites[19] = spriteSheet.getSubimage(120, 160, 40, 40); // line (Right -> Left)
 
-            snakeSprites[20] = spriteSheet.getSubimage(0, 200, 40, 40); // Tail (Up open)
+            snakeSprites[20] = spriteSheet.getSubimage(0, 200, 40, 40); // Tail (Down open)
             snakeSprites[21] = spriteSheet.getSubimage(40, 200, 40, 40); // Tail (Left open)
-            snakeSprites[22] = spriteSheet.getSubimage(80, 200, 40, 40); // Tail (Down open)
+            snakeSprites[22] = spriteSheet.getSubimage(80, 200, 40, 40); // Tail (Up open)
             snakeSprites[23] = spriteSheet.getSubimage(120, 200, 40, 40); // Tail (Right open)
 
             snakeSprites[24] = spriteSheet.getSubimage(0, 240, 40, 40); // Apple
